@@ -5,23 +5,41 @@ Project Structure
 The automation suite isolates the execution scripts within dedicated modules inside the step definitions directory, mapping features and JavaScript implementations as follows:
 
 cypress/
-  e2e/
-    step_definitions/
-      desafioApi/
-        desafioFront_Api.js
-      desafioFrontEnd/
-        desafioFront_Form.js
-        desafioFront_Progress.js
-        desafioFront_Tables.js
-        desafioFront_Windows.js
-      desafioApi_1.feature
-      desafioFront_Form.feature
-      desafioFront_Progress.feature
-      desafioFront_Tables.feature
-      desafioFront_Windows.feature
-  fixtures/
-  support/
+
+e2e/
+
+step_definitions/
+
+desafioApi/
+
+desafioFront_Api.js
+
+desafioFrontEnd/
+
+desafioFront_Form.js
+
+desafioFront_Progress.js
+
+desafioFront_Tables.js
+
+desafioFront_Windows.js
+
+desafioApi_1.feature
+
+desafioFront_Form.feature
+
+desafioFront_Progress.feature
+
+desafioFront_Tables.feature
+
+desafioFront_Windows.feature
+
+fixtures/
+
+support/
+
 cypress.config.js
+
 Automated Challenges and Execution Scope
 API Validation (desafioApi_1.feature): Directly asserts backend contract integrity, processing payload schemas, response structures, and HTTP status codes via native integration using cy.request.
 

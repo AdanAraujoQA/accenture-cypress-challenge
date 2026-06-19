@@ -1,5 +1,10 @@
 **Technical Assessment: Enterprise Automation Framework**
+
+
 **Architecture Overview**
+
+
+
 This repository houses a high-performance test automation architecture designed for the DemoQA ecosystem. It delivers a robust validation pipeline covering both synchronous backend API contracts and intricate asynchronous frontend user journeys.
 
 The framework is engineered using Cypress for core state control and element manipulation, integrated with the Cucumber Preprocessor to abstract technical execution into behavioral human-readable Gherkin specifications.

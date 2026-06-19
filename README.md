@@ -1,48 +1,62 @@
-# Accenture Technical Assessment - Automation Challenge
+Accenture Technical Assessment - Automation Framework
+This repository contains the automation engineering solution developed for the technical assessment on the DemoQA platform, covering both API contract validations and End-to-End frontend user journeys. The project is structured using Cypress for core automation execution and the Cucumber preprocessor to maintain behavior-driven development (BDD) alignment through Gherkin specifications.
 
-This repository contains the complete automation solution for both API and Frontend technical challenges on the DemoQA platform, built using **Cypress** and **Cucumber (BDD)**.
+Project Structure
+The automation suite isolates the execution scripts within dedicated modules inside the step definitions directory, mapping features and JavaScript implementations as follows:
 
-## Tech Stack & Core Libraries
+Plaintext
+cypress/
+├── e2e/
+│   └── step_definitions/
+│       ├── desafioApi/
+│       │   └── [API automation step scripts]
+│       ├── desafioFrontEnd/
+│       │   ├── desafioFront_Form.js
+│       │   ├── desafioFront_Progress.js
+│       │   ├── desafioFront_Tables.js
+│       │   └── desafioFront_Windows.js
+│       ├── desafioApi_1.feature
+│       ├── desafioFront_Form.feature
+│       ├── desafioFront_Progress.feature
+│       ├── desafioFront_Tables.feature
+│       └── desafioFront_Windows.feature
+├── fixtures/
+├── support/
+└── cypress.config.js
+Automated Challenges and Execution Scope
+API Validation (desafioApi_1.feature): Directly asserts backend contract integrity, processing payload schemas, response structures, and HTTP status codes via native integration using cy.request.
 
-* **Cypress (v12+)** - Main framework for End-to-End (E2E) and API testing.
-* **@badeball/cypress-cucumber-preprocessor** - Integration for Gherkin syntax and Behavioral Driven Development (BDD).
-* **@faker-js/faker** - Dynamic and randomized data generation to avoid state-pollution and hardcoded dependencies.
+Practice Form (desafioFront_Form.feature): Handles diverse DOM elements including dynamic dropdown selections, OS-level file attachments, radio button states, and date inputs. Data isolation is achieved by integrating @faker-js/faker to generate randomized, localized personas dynamically on each execution loop, eliminating hardcoded state pollution.
 
+Dynamic Web Tables (desafioFront_Tables.feature): Implements a data grid automation scenario where 12 dynamic records are programmatically populated. The script dynamically tracks the trailing index to execute target mutations and utilizes partial string-matching wildcard selectors (span[id^="delete-record-"]) to purge the dynamic rows efficiently during the teardown phase.
 
-## Automated Challenges & Scenarios
+Progress Bar Lifecycle (desafioFront_Progress.feature): Handles complex asynchronous animation frames. The script captures state changes to halt execution precisely within a threshold under 25%, resumes execution natively until the 100% threshold is met, and validates the UI state reset sequence back to 0%.
 
-### 1. API Testing
-* **Feature File:** `desafioApi_1.feature`
-* **Objective:** Validate backend contract integrity, payload responses, status codes, and schema compliance using Cypress native `cy.request()` structure.
+Alerts, Frames, and Windows (desafioFront_Windows.feature): Addresses non-standard window orchestration. Manages multi-tab routing through DOM manipulation by overriding target attributes, controls browser-level alert dialogs, and shifts execution context across sandbox iFrames.
 
-### 2. Practice Form Component
-* **Feature File:** `desafioFront_Form.feature`
-* **Objective:** Automate a complex registration form handling diverse UI interactions (radio buttons, checkboxes, custom state dropdowns, date pickers, and media uploads). 
-* **Data Strategy:** Leveraging `@faker-js/faker` to dynamically generate random profiles (names, emails, addresses) per execution.
+Engineering Decisions and Resilience
+The DemoQA target application features heavy third-party tracking scripts that frequently trigger unhandled exceptions unrelated to the core functionalities under test. To prevent these runtime scripts from crashing the execution pipelines, the framework actively suppresses uncaught exceptions globally:
 
-### 3. Web Tables Component
-* **Feature File:** `desafioFront_Tables.feature`
-* **Objective:** Manipulate data grids dynamically. The test creates 12 random records using structural loops, isolates and alters the exact last item created, and implements a conditional wildcard deletion loop to leave the grid clean.
+JavaScript
+Cypress.on('uncaught:exception', (err, runnable) => {
+  return false;
+});
+Furthermore, timing constraints and race conditions inherent to UI animations were solved deterministically by leveraging Cypress's built-in retry-ability mechanism through conditional assertions (.should()), completely deprecating the anti-pattern of hardcoded static pauses (cy.wait).
 
-### 4. Progress Bar Component
-* **Feature File:** `desafioFront_Progress.feature`
-* **Objective:** Handle complex asynchronous animation rendering. Intercepts real-time progression natively to stop the component precisely before 25%, resumes processing to 100%, and validates state transition upon reset back to 0%.
+Architectural Limitations and Future Improvements
+Due to the limited time available for the execution and delivery of this challenge, the Page Object Model (POM) design pattern was not implemented in this iteration. The step definitions directly manage element interaction layers. For an enterprise-scale architecture or long-term maintenance strategy, refactoring the codebase to abstract selectors and UI behaviors into dedicated Page Objects or adopting App Actions would be the immediate next step to maximize test script reusability and clean separation of concerns.
 
-### 5. Alerts, Frame & Windows Component
-* **Feature File:** `desafioFront_Windows.feature`
-* **Objective:** Address non-standard browser interactions. Manages multi-tab switching via attribute manipulation (`target="_blank"` removal), handles native browser dialog handlers (Alerts, Confirms, Prompts), and traverses nested iFrame contexts.
+Environment Setup and Execution
+Clone the repository and install the required node dependencies:
 
-##  Architecture & Best Practices Applied
+Bash
+git clone <repository-url>
+npm install
+To launch the interactive test runner UI:
 
-* **Asynchronous Resiliency:** Zero reliance on anti-patterns like hardcoded explicit waits (`cy.wait(ms)`). All timing assertions use Cypress's deterministic retry-ability engine via `.should()` hooks.
-* **Wildcard Selectors:** Solved dynamic UI identification issues by utilizing partial string matching selectors (e.g., `span[id^="delete-record-"]`) to bypass dynamic database row IDs.
-* **Strict BDD Execution:** Features and step definitions strictly isolated, abstracting execution layers and guaranteeing step reusability.
+Bash
+npx cypress open
+To execute the entire suite in headless mode for pipeline integration:
 
----
-
-## 🛠️ How to Setup and Run
-
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repository-url>
-   cd <project-folder>
+Bash
+npx cypress run --browser chrome

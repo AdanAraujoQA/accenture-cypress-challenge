@@ -79,8 +79,7 @@ JavaScript
 Cypress.on('uncaught:exception', (err, runnable) => {
   return false;
 });
-Deterministic Waiting
-This architecture enforces a strict ban on arbitrary static timeouts (cy.wait(ms)). Race conditions and animation lags are neutralized through Cypress's internal retry-ability core, utilizing conditional assertions (.should()) to wait only as long as the DOM requires to reach the desired state.
+
 
 Architectural Constraints & Technical Debt
 Design Notice: Due to strict time constraints allocated for execution and final delivery, the Page Object Model (POM) design pattern was bypassed in this lifecycle phase. Currently, selector definitions and interaction protocols live directly within the step implementation layer.
